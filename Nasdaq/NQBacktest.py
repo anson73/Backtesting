@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import pandas as pd
 
-def findHigh():
+def findWeeklyHigh():
     # Find which day is most likely to create the high of the week
     columns = ["Date", "Price", "Open", "High", "Low", "Vol.", "Change %"]
     nasdaq_data = pd.read_csv("DataFiles\\Nasdaq 100 Futures Historical Data.csv")
@@ -41,7 +41,7 @@ def findHigh():
 
     return days
 
-def findLow():
+def findWeeklyLow():
     # Find which day is most likely to create the low of the week
     columns = ["Date", "Price", "Open", "High", "Low", "Vol.", "Change %"]
     nasdaq_data = pd.read_csv("DataFiles\\Nasdaq 100 Futures Historical Data.csv")
@@ -81,7 +81,44 @@ def findLow():
 
     return days
 
+def dailyVolatility():
+    # Find which day is most volatile
+    nasdaq_data = pd.read_csv("DataFiles\\Nasdaq 100 Futures Historical Data.csv")
+    nasdaq_data.columns = nasdaq_data.columns.str.replace(' %', '')
+    days = {
+        "Monday": {"Counter": 0, "Percentage": 0}, 
+        "Tuesday": {"Counter": 0, "Percentage": 0}, 
+        "Wednesday": {"Counter": 0, "Percentage": 0}, 
+        "Thursday": {"Counter": 0, "Percentage": 0}, 
+        "Friday": {"Counter": 0, "Percentage": 0}
+    }
+    
+    #for date_str in dates:
+    for row in nasdaq_data.itertuples():
+        dayname = datetime.strptime(row.Date, "%d/%m/%Y").strftime("%A")
+        
+        if dayname and dayname != "Saturday" and dayname != "Sunday":
+            days[dayname]["Counter"] += 1
+            days[dayname]["Percentage"] += abs(float(row.Change[:-1]))
+    
+    for day in days:
+        days[day] = round(days[day]["Percentage"]/days[day]["Counter"], 2)
+
+    return days
+
+def findYearlyHigh():
+    # Find which month is most likely to create the high of the year
+
+
+    return
+
+def findYearlyLow():
+    # Find which month is most likely to create the low of the year
+
+
+    return
 
 if __name__ == "__main__":
-    print(findHigh())
-    print(findLow())
+    print(findWeeklyHigh())
+    print(findWeeklyLow())
+    print(dailyVolatility())
