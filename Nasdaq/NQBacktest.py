@@ -106,6 +106,29 @@ def dailyVolatility():
 
     return days
 
+def dailydirection(): 
+    # Find whether a day of the week is more likely to be bullish or bearish
+    nasdaq_data = pd.read_csv("DataFiles\\Nasdaq 100 Futures Historical Data.csv")
+    nasdaq_data.columns = nasdaq_data.columns.str.replace(' %', '')
+    days = {
+        "Monday": {"Bullish": 0, "Bearish": 0}, 
+        "Tuesday": {"Bullish": 0, "Bearish": 0}, 
+        "Wednesday": {"Bullish": 0, "Bearish": 0}, 
+        "Thursday": {"Bullish": 0, "Bearish": 0}, 
+        "Friday": {"Bullish": 0, "Bearish": 0}
+    }
+    
+    #for date_str in dates:
+    for row in nasdaq_data.itertuples():
+        dayname = datetime.strptime(row.Date, "%d/%m/%Y").strftime("%A")
+        
+        if dayname and dayname != "Saturday" and dayname != "Sunday":
+            if row.Change[0] == "-": 
+                days[dayname]["Bearish"] += 1
+            else: 
+                days[dayname]["Bullish"] += 1
+    return days
+
 def findYearlyHigh():
     # Find which month is most likely to create the high of the year
 
@@ -122,3 +145,4 @@ if __name__ == "__main__":
     print(findWeeklyHigh())
     print(findWeeklyLow())
     print(dailyVolatility())
+    print(dailydirection())
