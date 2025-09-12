@@ -131,18 +131,29 @@ def dailydirection():
 
 def findYearlyHigh():
     # Find which month is most likely to create the high of the year
+    nasdaq_data = pd.read_csv("DataFiles\\Nasdaq 100 Futures Historical Data.csv")
+    nasdaq_data[['Day', 'Month', 'Year']] = nasdaq_data['Date'].str.split('/', expand=True)
+    nasdaq_data = nasdaq_data.groupby(['Year', 'Month'], as_index=False)['High'].max()
+    nasdaq_data = nasdaq_data.loc[nasdaq_data.groupby('Year')['High'].idxmax()]
 
-
-    return
+    return nasdaq_data
 
 def findYearlyLow():
     # Find which month is most likely to create the low of the year
+    nasdaq_data = pd.read_csv("DataFiles\\Nasdaq 100 Futures Historical Data.csv")
+    nasdaq_data[['Day', 'Month', 'Year']] = nasdaq_data['Date'].str.split('/', expand=True)
+    nasdaq_data = nasdaq_data.groupby(['Year', 'Month'], as_index=False)['Low'].min()
+    nasdaq_data = nasdaq_data.loc[nasdaq_data.groupby('Year')['Low'].idxmin()]
 
-
-    return
+    return nasdaq_data
 
 if __name__ == "__main__":
+    '''
     print(findWeeklyHigh())
     print(findWeeklyLow())
     print(dailyVolatility())
     print(dailydirection())
+    '''
+    
+    print(findYearlyHigh())
+    print(findYearlyLow())
