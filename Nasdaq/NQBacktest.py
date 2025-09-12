@@ -148,12 +148,9 @@ def findYearlyLow():
     return nasdaq_data
 
 if __name__ == "__main__":
-    '''
     print(findWeeklyHigh())
     print(findWeeklyLow())
     print(dailyVolatility())
     print(dailydirection())
-    '''
-    
     print(findYearlyHigh())
     print(findYearlyLow())
